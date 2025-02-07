@@ -12,6 +12,7 @@ class TaskTimer:
     """Allows the user to start tasks, stop tasks, see currently running tasks, a summary of tasks
     and to end the function when they are done.
     """
+    
     def __init__(self):
         # History of all the tasks
         self.tasks = {}
