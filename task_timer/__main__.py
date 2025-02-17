@@ -1,114 +1,132 @@
-# Program: Task Timer
-# Class: CS 314
-# Date: 06-Feb-2025
-# Author: Kaylee Hinton
-# Descripton: This task timer will be able to start and stop currently running tasks
-# while also being able to allow the tracking of concurrent tasks and include color in the output console
+"""
+Program: Task Timer
+Class: CS 314
+Date: 06-Feb-2025
+Author: Kaylee Hinton
+Descripton: This task timer will be able to start and stop currently running tasks
+while also being able to allow the tracking of concurrent tasks and include color in the output console
+"""
 
 import time
-import click
+import datetime
+from colorama import Fore, Back, Style
 
 class TaskTimer:
-    """Allows the user to start tasks, stop tasks, see currently running tasks, a summary of tasks
-    and to end the function when they are done.
-    """
+    """ This class allows a user to create and track multiple concurrent tasks, with the ability to stop
+    a specific or multiple tasks. The class also allows for the user to track currently running tasks and 
+    record a list of completed tasks. 
     
+    """
+
     def __init__(self):
-        # History of all the tasks
         self.tasks = {}
-        # History of current running tasks
         self.running_tasks = {}
 
     def start_task(self, task_name):
-        """ Takes in a task name and creates a task and starts a designated timer for the task just started """
+        """ Allows for a task with a user given name to be created and start recording its time """
 
         if task_name in self.running_tasks:
-            # Shows the user there is already a task with that name
-            print(" ")
-            click.secho('Error', fg='red')
+            print()
+            print(Fore.RED + 'Error')
             print(f"Task '{task_name}' is already running.")
             return
+
+        # starting_time = datetime.datetime.now().strftime("%H:%M:%S")
+        # print(starting_time)
         
-        # Starts a new task and adds it to the running task dictionary
         self.running_tasks[task_name] = time.time()
-        print(" ")
-        click.secho('Started Task', fg='green')
+        print()
+        print(Fore.GREEN + 'Started Task')
 
 
     def stop_task(self, task_name):
-        """ Takes in the specified task name and stops the timer with the designated task """
-
+        """ Allows for a task with a user given name to be stopped and give its elasped time """
+        
         if not task_name:
-            # Shows the user that they did not specify a task
-
-            click.secho('Error: Please specifiy a task name', fg='red')
+            print(Fore.RED + 'Error: Please specifiy a task name')
             return
         
-        # No currently running task with that name
         if task_name not in self.running_tasks:
-            click.secho('Error: No task with that name currently running', fg='red')
+            print(Fore.RED + 'Error: No task with that name currently running')
             return
         
-        # Finds the total time that was recorded for that task when it was first started to when it stopped
-        elapsed_time = time.time() - self.running_tasks.pop(task_name)
 
+        elapsed_time = time.time() - self.running_tasks.pop(task_name)
         if task_name in self.running_tasks:
             self.tasks[task_name] += elapsed_time
         else:
             self.tasks[task_name] = elapsed_time
 
-        print(" ")
-        click.secho('Stopped Task', fg='red')
+        print()
+        print(Fore. RED + 'Stopped Task')
         print(f"Time spent: {elapsed_time:.2f} seconds")
 
 
     def show_summary(self):
-        """ Prints a complete list of all tasks"""
+        """ Creates a list of all tasks that were completed """
 
-        click.secho('Time Sheet Summary:', fg='blue')
+        print(Fore.CYAN + 'Time Sheet Summary:')
         for task, duration in self.tasks.items():
             print(f"{task}: {duration:.2f} seconds")
 
 
     def current_running_task(self):
-        """ Prints a complete list of all the tasks still currently running """
+        """ Creates a list of all tasks that are currently being timed """
 
         if self.running_tasks:
-            click.secho('Current Running Tasks', fg='green')
-            print(f"{self.running_tasks}")
-            #print(f"Current running tasks: {self.running_tasks}")
+            print(Fore.GREEN + 'Current Running Tasks')
+            for task, duration in self.running_tasks.items():
+                print(f"{task}: {duration: .02f} seconds")
+
         else:
-            click.secho('No Task is currently running', fg='red')
+            print(Fore.RED + 'No Task is currently running')
 
 
 def main():
-    """Starts the main function and allows the user to access all the features of the class"""
+    """ User-driven menu that allows the user to utilize all the parts of the task timer class """
     timer = TaskTimer()
-    print(" ")
-    click.secho('Use the commands below to start or stop a task/tasks, to see currently running tasks, a task summary, or to exit the program', fg='green')
+    print()
+    print(Fore.GREEN + 'Use the commands below to start or stop a task/tasks, to see currently running tasks, a task summary, a help menu, or to exit the program')
+
     while True:
-        print("")
-        command = input("Enter command (Start [task], Stop [task], Summary, Current, Exit): ").lower()
+        print()
+        command = input("Enter command (Start [task], Stop [task], Summary, Current, Help, Exit): ").lower()
         if command.startswith("start"):
             _, task_name = command.split(" ", 1)
-            # Calls the function to start a task with the task name
             timer.start_task(task_name)
+
         elif command.startswith("stop"):
             _, task_name = command.split(" ", 1)
-            # Calls the function to stop a task with the task name
             timer.stop_task(task_name)
+
         elif command == "summary":
-            # Calls the function to show the summary of all completed tasks
             timer.show_summary()
+
         elif command == "current":
-            # Calls the function to show the current tasks that are being timed
             timer.current_running_task()
-        # Allows the user to exit the program when they are done
+
+        elif command == "help":
+            print(Fore.YELLOW + 'List of available commands')
+            print(Fore.GREEN + 'Start [task name]: Starts the timer for a task with a given name') 
+            print(Fore.RED + 'Stop [task name]: Stops the timer for a task with a given name')
+            print(Fore.CYAN + 'Summary: Prints a list of completed tasks')
+            print(Fore.GREEN + 'Current: Prints a list of currently running tasks')
+            print(Fore.YELLOW + 'Help: displays each command with the descriptions')
+            print(Fore.RED + 'Exit: exits the task timer')
+
         elif command == "exit":
             break
         else:
-            click.secho('Invalid command', fg='red')
-
+            print(Fore.RED + 'Invalid command')
+            
 
 if __name__ == '__main__':
     main()
+
+    # use datetime and not time.time
+    # Mess with the current output so its prettier and not a dictionary output
+        #If datetime gets working for current output, make it so its the current total time
+
+    # to use dateetime you would need to set a variable that takes in the users time
+    # then have the timer actually start the task while recording that time
+    # then access that time to use for the elapsed time
