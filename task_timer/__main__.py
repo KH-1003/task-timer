@@ -122,11 +122,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-    # use datetime and not time.time
-    # Mess with the current output so its prettier and not a dictionary output
-        #If datetime gets working for current output, make it so its the current total time
-
-    # to use dateetime you would need to set a variable that takes in the users time
-    # then have the timer actually start the task while recording that time
-    # then access that time to use for the elapsed time
