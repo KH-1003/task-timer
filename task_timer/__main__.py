@@ -8,7 +8,6 @@ while also being able to allow the tracking of concurrent tasks and include colo
 """
 
 import time
-import datetime
 from colorama import Fore, Back, Style
 
 class TaskTimer:
